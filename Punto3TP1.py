@@ -278,7 +278,7 @@ while True:
     print("Sistema de recuperacion de Informacion..."+"\n")
     print("1. Buscar adyacencia entre palabras")
     print("2. Buscar todas las palabras que estan cerca de otra")
-    print("3. Opción 3")
+    print("3. Buscar una palabra y saber en que documentos se encuentran y posicion ")
     print("4. Opción 3")
     print("5. Salir")
 
@@ -311,11 +311,6 @@ while True:
             print("Las palabras cercanas a "+palabra_1+" son: ", palabras_cercanas)
         else:
             print("No se encontraron palabras cercanas a "+palabra_1)
-
-
-
-        
-
         input("Presione enter para continuar...")
 
         pass
