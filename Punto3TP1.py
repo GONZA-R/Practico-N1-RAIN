@@ -26,14 +26,6 @@ with open("stopwords.txt", "r") as stopwords:
 
 ###################################################
 
-"""
-#################################
-# funcion para eliminar stop word
-def eliminarstopwords(texto,stopwords):
-    return ' '.join([word for word in texto.split(' ') if word not in stopwords])
-
-##########################################
-"""
 def eliminarstopwords(texto, stopwords):
     # Eliminar acentos de las stop words
     stopwords_sin_acentos = [eliminar_acentos(stopword) for stopword in stopwords]
@@ -153,8 +145,9 @@ def crear_fichero_invertido_posicional(docs):
         for position, word in enumerate(doc.split(), start=1):
             if word not in dictionary:
                 dictionary[word] = []
-            dictionary[word].append(("documento " + str(doc_id), "posicion " + str(position)))
-
+            #dictionary[word].append(("documento " + str(doc_id), "posicion " + str(position)))
+            dictionary[word].append((doc_id, position))
+    
     # Devolver el archivo invertido posicional
     return dictionary
 
@@ -169,6 +162,53 @@ def ordenar_diccionario(diccionario):
     for key in diccionario:
         diccionario[key].sort(key=lambda tup: tup[0])
     return diccionario
+
+"""
+def buscar_adyacentes(palabra1, palabra2, rango_adyacencia, indice_invertido):
+    # Buscar las listas de posiciones de cada palabra en el índice invertido
+    posiciones_palabra1 = indice_invertido.get(palabra1, [])
+    posiciones_palabra2 = indice_invertido.get(palabra2, [])
+
+    # Verificar si alguna posición de palabra1 está adyacente a alguna posición de palabra2
+    for pos1 in posiciones_palabra1:
+        for pos2 in posiciones_palabra2:
+            #if abs(pos1[1] - pos2[1]) <= rango_adyacencia:  # Convertir tuplas a enteros
+            if pos2[0] == pos1[0] and abs(pos1[1] - pos2[1]) <= rango_adyacencia:
+                return True
+
+    # Si no se encontró ninguna adyacencia, retornar False
+    return False
+"""
+def buscar_adyacentes(palabra_1, palabra_2, fichero_invertido_posicional):
+    # Obtener la lista de ocurrencias de ambas palabras en el archivo invertido posicional
+    ocurrencias_palabra_1 = fichero_invertido_posicional.get(palabra_1, [])
+    ocurrencias_palabra_2 = fichero_invertido_posicional.get(palabra_2, [])
+
+    # Inicializar la lista de adyacencias encontradas
+    adyacencias_encontradas = []
+
+    # Recorrer todas las ocurrencias de la primera palabra
+    for ocurrencia_palabra_1 in ocurrencias_palabra_1:
+        documento_palabra_1, posicion_palabra_1 = ocurrencia_palabra_1
+
+        # Buscar ocurrencias de la segunda palabra en el mismo documento y cercanas a la primera palabra
+        for ocurrencia_palabra_2 in ocurrencias_palabra_2:
+            documento_palabra_2, posicion_palabra_2 = ocurrencia_palabra_2
+            if documento_palabra_1 == documento_palabra_2 and abs(posicion_palabra_1 - posicion_palabra_2) <= 10:
+                adyacencias_encontradas.append((documento_palabra_1, posicion_palabra_1, posicion_palabra_2))
+
+    # Devolver la lista de adyacencias encontradas
+    return adyacencias_encontradas
+
+
+############################
+#Borrar pantalla
+def clear_screen():
+    os.system('clear' if os.name == 'posix' else 'cls')
+############################
+
+
+
 
 
 
@@ -188,13 +228,14 @@ for archivo in lista_archivos_pdf:
     #Aqui esta creando el fichero invertido con frecuencias
     fichero_invertido = crear_fichero_invertido(documentos)
     
-
+    """
     # Esta seccion es opcional
     #Solo permite guardar por separado cada documento con la lista de palabras extraidas
     nombre_doc = "Doc0" + str(cont_aux+1)+".txt"
     guardar_en_archivo(nombre_doc, texto_completo)    
     cont_aux += 1
     ##########################
+    """
 
 #Eliminas tuplas repetidas del diccionario completo
 eliminar_tuplas_repetidas(fichero_invertido)
@@ -210,3 +251,49 @@ fichero_invertido_posicional = crear_fichero_invertido_posicional(documentos)
 escribir_fichero_invertido(fichero_invertido_posicional, "Fichero_Invertido_Posicional.txt")
 ###################
 
+
+################
+
+
+while True:
+    clear_screen()
+    print("Sistema de recuperacion de Informacion..."+"\n")
+    print("1. Buscar adyacencia entre palabras")
+    print("2. Buscar que tan cerca esta una palabra de otra")
+    print("3. Opción 3")
+    print("4. Opción 3")
+    print("5. Salir")
+    opcion = input("Ingrese una opción: ")
+    if opcion == "1":
+        clear_screen()
+        # Código para la opción 1
+        print("Se va a buscar si existe adyacencia entre dos palabras...")
+        palabra_1 = input("Ingrese la primer palabra: ")
+        palabra_2 = input("Ingrese la segunda palabra: ")
+        encontrado=buscar_adyacentes(palabra_1, palabra_2, fichero_invertido_posicional)
+        if encontrado:
+            print(f"Se encontró al menos una adyacencia entre '{palabra_1}' y '{palabra_2}'")
+            input("Presione enter para continuar...")
+        else:
+            print(f"No se encontraron adyacencias entre '{palabra_1}' y '{palabra_2}'")
+            input("Presione enter para continuar...")
+
+        pass
+    elif opcion == "2":
+        clear_screen()
+        # Código para la opción 2
+        pass
+    elif opcion == "3":
+        clear_screen()
+        # Código para la opción 3
+        pass
+    elif opcion == "4":
+        clear_screen()
+        # Código para la opción 3
+        pass
+    elif opcion == "5":
+        clear_screen()
+        print("Saliendo del programa...")
+        break
+    else:
+        print("Opción no válida, por favor intente de nuevo.")
