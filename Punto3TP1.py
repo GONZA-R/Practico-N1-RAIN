@@ -179,6 +179,11 @@ def buscar_adyacentes(palabra1, palabra2, rango_adyacencia, indice_invertido):
     # Si no se encontró ninguna adyacencia, retornar False
     return False
 """
+
+
+#############################################################################################
+#Busca si existe adyacencia entre palabras ingresadas por consola en un mismo documento
+
 def buscar_adyacentes(palabra_1, palabra_2, fichero_invertido_posicional):
     # Obtener la lista de ocurrencias de ambas palabras en el archivo invertido posicional
     ocurrencias_palabra_1 = fichero_invertido_posicional.get(palabra_1, [])
@@ -199,6 +204,19 @@ def buscar_adyacentes(palabra_1, palabra_2, fichero_invertido_posicional):
 
     # Devolver la lista de adyacencias encontradas
     return adyacencias_encontradas
+################################################################################################
+
+def buscar_palabras_cercanas(fichero_invertido_posicional, palabra, distancia):
+    palabras_cercanas = set()
+    posiciones_palabra = fichero_invertido_posicional.get(palabra, [])
+    for documento, posicion in posiciones_palabra:
+        for otra_palabra, posiciones_otra_palabra in fichero_invertido_posicional.items():
+            if otra_palabra != palabra:
+                for doc, pos in posiciones_otra_palabra:
+                    if doc == documento and abs(pos - posicion) <= distancia:
+                        palabras_cercanas.add(otra_palabra)
+    return palabras_cercanas
+
 
 
 ############################
@@ -259,10 +277,11 @@ while True:
     clear_screen()
     print("Sistema de recuperacion de Informacion..."+"\n")
     print("1. Buscar adyacencia entre palabras")
-    print("2. Buscar que tan cerca esta una palabra de otra")
+    print("2. Buscar todas las palabras que estan cerca de otra")
     print("3. Opción 3")
     print("4. Opción 3")
     print("5. Salir")
+
     opcion = input("Ingrese una opción: ")
     if opcion == "1":
         clear_screen()
@@ -279,9 +298,26 @@ while True:
             input("Presione enter para continuar...")
 
         pass
+
+
     elif opcion == "2":
         clear_screen()
         # Código para la opción 2
+        print("Se va a listar todas las palabras que esten cerca de otra ingresada..."+"\n")
+        palabra_1 = input("Ingrese la palabra: ")
+        
+        palabras_cercanas = buscar_palabras_cercanas(fichero_invertido_posicional,palabra_1, 1)
+        if palabras_cercanas:
+            print("Las palabras cercanas a "+palabra_1+" son: ", palabras_cercanas)
+        else:
+            print("No se encontraron palabras cercanas a "+palabra_1)
+
+
+
+        
+
+        input("Presione enter para continuar...")
+
         pass
     elif opcion == "3":
         clear_screen()
