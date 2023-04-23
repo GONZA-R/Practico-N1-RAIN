@@ -46,7 +46,7 @@ def eliminar_acentos(cadena):
     #Función que recibe una cadena de texto y retorna la misma cadena sin acentos.
     return ''.join(c for c in unicodedata.normalize('NFD', cadena) if unicodedata.category(c) != 'Mn')
 
-##################3
+##################
 
 #Crear una función para traducir el texto reconstruido al español:
 
@@ -96,7 +96,7 @@ textotraducido=eliminar_acentos(textotraducido)
 with open("TextoReconstruido.txt", "w") as archivo:
     archivo.write("Texto Reconstruido" + '\n'+ '\n')
     archivo.write(texto + '\n'+ '\n')
-    archivo.write("Texto Traducido al español" + '\n'+ '\n')
+    archivo.write("Texto Traducido al espanol" + '\n'+ '\n')
     archivo.write(textotraducido + '\n')
 
 
