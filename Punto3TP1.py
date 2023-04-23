@@ -26,13 +26,23 @@ with open("stopwords.txt", "r") as stopwords:
 
 ###################################################
 
+"""
 #################################
 # funcion para eliminar stop word
 def eliminarstopwords(texto,stopwords):
     return ' '.join([word for word in texto.split(' ') if word not in stopwords])
 
 ##########################################
-
+"""
+def eliminarstopwords(texto, stopwords):
+    # Eliminar acentos de las stop words
+    stopwords_sin_acentos = [eliminar_acentos(stopword) for stopword in stopwords]
+    # Eliminar las stop words del texto
+    palabras = texto.split()
+    palabras_sin_stopwords = [palabra for palabra in palabras if palabra.lower() not in stopwords_sin_acentos]
+    # Unir las palabras sin stopwords en una sola cadena de texto
+    texto_sin_stopwords = ' '.join(palabras_sin_stopwords)
+    return texto_sin_stopwords
 
 
 import re
@@ -47,9 +57,21 @@ def limpiar_texto(texto):
     
     # Eliminar espacios en blanco adicionales
     texto = re.sub(r'\s+', ' ', texto).strip()
+    texto=eliminar_acentos(texto)
+
 
 
     return texto
+
+
+##################
+import unicodedata
+
+def eliminar_acentos(cadena):
+    #Función que recibe una cadena de texto y retorna la misma cadena sin acentos.
+    return ''.join(c for c in unicodedata.normalize('NFD', cadena) if unicodedata.category(c) != 'Mn')
+
+##################
 
 
 # Leer cada uno de los PDFs
