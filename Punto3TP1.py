@@ -163,22 +163,7 @@ def ordenar_diccionario(diccionario):
         diccionario[key].sort(key=lambda tup: tup[0])
     return diccionario
 
-"""
-def buscar_adyacentes(palabra1, palabra2, rango_adyacencia, indice_invertido):
-    # Buscar las listas de posiciones de cada palabra en el índice invertido
-    posiciones_palabra1 = indice_invertido.get(palabra1, [])
-    posiciones_palabra2 = indice_invertido.get(palabra2, [])
 
-    # Verificar si alguna posición de palabra1 está adyacente a alguna posición de palabra2
-    for pos1 in posiciones_palabra1:
-        for pos2 in posiciones_palabra2:
-            #if abs(pos1[1] - pos2[1]) <= rango_adyacencia:  # Convertir tuplas a enteros
-            if pos2[0] == pos1[0] and abs(pos1[1] - pos2[1]) <= rango_adyacencia:
-                return True
-
-    # Si no se encontró ninguna adyacencia, retornar False
-    return False
-"""
 
 
 #############################################################################################
@@ -217,6 +202,19 @@ def buscar_palabras_cercanas(fichero_invertido_posicional, palabra, distancia):
                         palabras_cercanas.add(otra_palabra)
     return palabras_cercanas
 
+#########################################
+
+def buscar_palabra(fichero_invertido_posicional, palabra):
+    resultados = []
+    posiciones_palabra = fichero_invertido_posicional.get(palabra, [])
+    for documento, posicion in posiciones_palabra:
+        resultados.append(f"{documento}\t\t{posicion}")
+    if resultados:
+        print("\n".join(resultados))
+    else:
+        print(f"No se encontró la palabra '{palabra}' en el archivo invertido posicional.")
+#########################################
+
 
 
 ############################
@@ -246,15 +244,7 @@ for archivo in lista_archivos_pdf:
     #Aqui esta creando el fichero invertido con frecuencias
     fichero_invertido = crear_fichero_invertido(documentos)
     
-    """
-    # Esta seccion es opcional
-    #Solo permite guardar por separado cada documento con la lista de palabras extraidas
-    nombre_doc = "Doc0" + str(cont_aux+1)+".txt"
-    guardar_en_archivo(nombre_doc, texto_completo)    
-    cont_aux += 1
-    ##########################
-    """
-
+    
 #Eliminas tuplas repetidas del diccionario completo
 eliminar_tuplas_repetidas(fichero_invertido)
 #Es necesario ordenarlas
@@ -279,7 +269,7 @@ while True:
     print("1. Buscar adyacencia entre palabras")
     print("2. Buscar todas las palabras que estan cerca de otra")
     print("3. Buscar una palabra y saber en que documentos se encuentran y posicion ")
-    print("4. Opción 3")
+    print("4. Opción no disponible =()")
     print("5. Salir")
 
     opcion = input("Ingrese una opción: ")
@@ -305,7 +295,7 @@ while True:
         # Código para la opción 2
         print("Se va a listar todas las palabras que esten cerca de otra ingresada..."+"\n")
         palabra_1 = input("Ingrese la palabra: ")
-        
+        #aqui puedo cambiar q este a n palabras
         palabras_cercanas = buscar_palabras_cercanas(fichero_invertido_posicional,palabra_1, 1)
         if palabras_cercanas:
             print("Las palabras cercanas a "+palabra_1+" son: ", palabras_cercanas)
@@ -317,10 +307,19 @@ while True:
     elif opcion == "3":
         clear_screen()
         # Código para la opción 3
+        print("Se va a consultar si se encuentra una palabra ingresada"+"\n")
+        palabra_1 = input("Ingrese la palabra: ")
+        print("Documento    Posicion")
+        buscar_palabra(fichero_invertido_posicional, palabra_1)
+        input("Presione enter para continuar...")
+
+
         pass
     elif opcion == "4":
         clear_screen()
         # Código para la opción 3
+        palabra_1 = input("Ingrese la palabra: ")
+        input("Presione enter para continuar...")
         pass
     elif opcion == "5":
         clear_screen()
